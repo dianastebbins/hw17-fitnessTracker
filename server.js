@@ -36,7 +36,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fitnesstrackerd
 
 // POST path, creates a new workout
 app.post("/submit-workout", ({ body }, res) => {
-    // console.log(`Here app.post/submit-workout: ${body}`);
     db.Workout.create(body)
         .then(dbWorkout => {
             res.json(dbWorkout);
@@ -48,7 +47,6 @@ app.post("/submit-workout", ({ body }, res) => {
 
 // POST path, creates a new exercise and then pushes it onto a workout
 app.post("/submit-exercise", ({ body }, res) => {
-    // console.log(`Here app.post/submit-exercise: ${body.name}`);
     db.Exercise.create(body)
         .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
         .then(dbExercise => {
@@ -57,6 +55,22 @@ app.post("/submit-exercise", ({ body }, res) => {
         .catch(err => {
             res.json(err);
         });
+});
+
+
+// POST path, creates a new exercise and then pushes it onto a workout
+app.post("/submit-exercise/:id", (req, res) => {
+    console.log(request.params.id);
+    console.log(request);
+    console.log(`Here app.post/submit-exercise/:id: ${request.params.body.name}`);
+    // db.Exercise.create(body)
+    //     .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
+    //     .then(dbExercise => {
+    //         res.json(dbExercise);
+    //     })
+    //     .catch(err => {
+    //         res.json(err);
+    //     });
 });
 
 // GET paths, get workouts, get exercises, get workouts populated with exercises details

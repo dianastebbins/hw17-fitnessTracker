@@ -55,7 +55,7 @@ const router = require("express").Router();
 //     })
 // });
 
-// POST path, creates a new not and then pushes it onto a user (in this case, just the single user in user table)
+// POST path, creates a new note and then pushes it onto a user (in this case, just the single user in user table)
 router.post("/submit", ({ body }, res) => {
     console.log("Here app.post/submit");
 //   db.Note.create(body)

@@ -1,21 +1,22 @@
+
 function getWorkouts() {
     // get all the workouts, order by create date desc
     fetch("/workouts")
-    .then(function (response) {
-        if (response.status !== 200) {
-            console.log("uh-oh. problem getting workouts")
-            return;
-        }
-        response.json().then(function (data) {
-            displayWorkouts(data);
+        .then(function (response) {
+            if (response.status !== 200) {
+                console.log("uh-oh. problem getting workouts")
+                return;
+            }
+            response.json().then(function (data) {
+                displayWorkouts(data);
+            });
+        })
+        .catch(function (err) {
+            console.log("fetch error : ", err);
         });
-    })
-    .catch(function (err) {
-        console.log("fetch error : ", err);
-    });
 }
 
-function displayWorkouts(workouts){
+function displayWorkouts(workouts) {
     // clear out any current content
     const latestWO = document.getElementById("latest-wo");
     latestWO.innerHTML = "";
@@ -23,56 +24,63 @@ function displayWorkouts(workouts){
     previousWO.innerHTML = "";
 
     // build card for the newest workout created
-    if(workouts.length > 0){
-        latestWO.insertAdjacentHTML("beforeend", buildWorkoutCard(workouts[0], true));
-    }
+    for (let index = 0; index < workouts.length; index++) {
+        let createdDate = workouts[index].createdAt;
+        console.log(createdDate);
 
-    // build card(s) for older workouts
-    if(workouts.length > 1){
-        for (let index = 1; index < workouts.length; index++) {
-            previousWO.insertAdjacentHTML("beforeend",buildWorkoutCard(workouts[index], false));
+        // create a new card and all it's pieces (header, body, footer) for styling
+        let newCardEl = document.createElement("div");
+        newCardEl.setAttribute("class", "card");
+
+        let newCardHeaderEl = document.createElement("div");
+        newCardHeaderEl.setAttribute("class", "card-header");
+        newCardHeaderEl.innerText = `${workouts[index].title}`;
+
+        let newCardBodyEl = document.createElement("div");
+        newCardBodyEl.setAttribute("class", "card-body");
+
+        // TODO: this will be a loop of exercises
+        let newExerciseTitleEl = document.createElement("p");
+        newExerciseTitleEl.setAttribute("class", "card-title");
+        newExerciseTitleEl.innerText = "Exercise 1 Name";
+        let newExerciseTextEl = document.createElement("p");
+        newExerciseTextEl.setAttribute("class", "card-text");
+        newExerciseTextEl.innerText = "Exercise 1 Details";
+        newCardBodyEl.append(newExerciseTitleEl);
+        newCardBodyEl.append(newExerciseTextEl);
+
+        let newAddBtnEl = document.createElement("button");
+        newAddBtnEl.setAttribute("class", "btn btn-sm customBtn addExerciseBtn");
+        newAddBtnEl.setAttribute("type", "button");
+        newAddBtnEl.setAttribute("data-id", `${workouts[index]._id}`);
+        newAddBtnEl.innerText = `Add new exercise`;
+        // also create an event listener for this new button
+        newAddBtnEl.addEventListener("click", getNewExerciseEntry);
+
+        // <div class="card-footer"><large class="text-muted">${kudos}</large>
+        let newCardFooterEl = document.createElement("div");
+        newCardFooterEl.setAttribute("class", "card-footer");
+        //<large class="text-muted">${kudos}</large>
+        let newLargeEl = document.createElement("large");
+        newLargeEl.setAttribute("class", "text-muted");
+        newLargeEl.innerText = `Workout created on ${createdDate}`;
+        newCardFooterEl.append(newLargeEl);
+
+        newCardEl.append(newCardHeaderEl);
+        newCardEl.append(newCardBodyEl);
+        newCardEl.append(newAddBtnEl);
+        newCardEl.append(newCardFooterEl);
+
+        if (index === 0) {
+            latestWO.append(newCardEl);
+        } else {
+            previousWO.append(newCardEl);
         }
     }
 }
 
-function buildWorkoutCard(workout, addKudos) {
-    // add kudos message if indicated
-    const kudos = addKudos ? "Amazing! Keep going!!" : "...";
-    
-    // show the date this workout was created
-    let createdDate = workout.createdAt; // convert this to something prettier...
-
-    // build all the details of the actual exercises associated to this workout
-    let exerciseDetails = buildExerciseDetails(workout.exercises)
-
-    // put it all together...
-    let html = `
-    <div class="card">
-        <div class="card-header">
-            ${workout.title} created on ${createdDate}.
-        </div>
-        <div class="card-body" data-id="${workout._id}>
-            ${exerciseDetails}
-        </div>
-        <div class="card-footer">
-            <large class="text-muted">${kudos}</large>
-        </div>
-    </div>`
-    return html;
-};
-
-// display the particulars for every exercise
-function buildExerciseDetails(exercises) {
-    let html = "";
-
-    // exercises.forEach(exercise => {
-        html += `
-        <p class="card-title">Exercise 1 Name</p>
-        <p class="card-text">Exercise 1 Details</p>`        
-    // });
-
-    return html;
+function getNewExerciseEntry() {
+    console.log("HERE !!!")
 }
-
 
 getWorkouts();
