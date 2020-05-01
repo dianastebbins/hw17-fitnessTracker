@@ -28,56 +28,46 @@ app.use(express.static("public"));
 
 // pull mongoose in and connect it either to Heroku MONGODB_URI or database on localhost
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fitnesstrackerdb", {
-    useNewUrlParser: true
+  useNewUrlParser: true
 });
-
-// routes
-// app.use(require("./routes/api.js"));
 
 // POST path, creates a new workout
 app.post("/submit-workout", ({ body }, res) => {
-    db.Workout.create(body)
-        .then(dbWorkout => {
-            res.json(dbWorkout);
-        })
-        .catch(err => {
-            res.json(err);
-        });
+  console.log("here");
+  db.Workout.create(body)
+    .then(dbWorkout => {
+      // res.json(dbWorkout);
+      res.redirect("/");
+    })
+    .catch(err => {
+      res.json(err);
+    });
 });
 
 // POST path, creates a new exercise and then pushes it onto a workout
-app.post("/submit-exercise", ({ body }, res) => {
-    db.Exercise.create(body)
-        .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
-        .then(dbExercise => {
-            // res.json(dbExercise);
-            res.redirect("/");
-        })
-        .catch(err => {
-            res.json(err);
-        });
+app.post("/submit-exercise", (req, res) => {
+  const body = req.body;
+  const workoutID = body.workoutID;
+  const newExercise = {
+    name: body.name,
+    type: body.type,
+    weight: body.weight,
+    sets: body.sets,
+    reps: body.reps,
+    duration: body.duration,
+    cardio: body.distance ? true : false,
+    distance: body.distance
+  }
+  
+  db.Exercise.create(newExercise)
+    .then(({ _id }) => db.Workout.findOneAndUpdate({ _id: workoutID}, { $push: { exercises: _id } }, { new: true }))
+    .then(dbExercise => {
+      res.redirect("/");
+    })
+    .catch(err => {
+      res.json(err);
+    });
 });
-
-
-// POST path, creates a new exercise and then pushes it onto a workout
-app.post("/submit-exercise/:id", (req, res) => {
-    console.log(request.params.id);
-    console.log(request);
-    console.log(`Here app.post/submit-exercise/:id: ${request.params.body.name}`);
-    // db.Exercise.create(body)
-    //     .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
-    //     .then(dbExercise => {
-    //         res.json(dbExercise);
-    //     })
-    //     .catch(err => {
-    //         res.json(err);
-    //     });
-});
-
-// app.get("/new/exercise", (req, res) => {
-//     console.log("Here !!!")
-//     res.redirect("./exercise");
-// })
 
 // GET paths, get workouts, get exercises, get workouts populated with exercises details
 app.get("/exercises", (req, res) => {
@@ -91,7 +81,8 @@ app.get("/exercises", (req, res) => {
 });
 
 app.get("/workouts", (req, res) => {
-  db.Workout.find({}).sort('-createdAt')
+  db.Workout.find({})
+    .sort('-createdAt')
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
@@ -102,6 +93,7 @@ app.get("/workouts", (req, res) => {
 
 app.get("/populated", (req, res) => {
   db.Workout.find({})
+    .sort('-createdAt')
     .populate("exercises")
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -113,5 +105,5 @@ app.get("/populated", (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`App running on port ${PORT}!`);
+  console.log(`App running on port ${PORT}!`);
 });

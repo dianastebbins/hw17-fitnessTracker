@@ -1,7 +1,10 @@
 
-function getWorkouts() {
+function getWorkouts() {    
+    document.getElementById("workout-section").style.display = "block";
+    document.getElementById("exercise-section").style.display = "none";
+
     // get all the workouts, order by create date desc
-    fetch("/workouts")
+    fetch("/populated")
         .then(function (response) {
             if (response.status !== 200) {
                 console.log("uh-oh. problem getting workouts")
@@ -25,49 +28,53 @@ function displayWorkouts(workouts) {
 
     // build card for the newest workout created
     for (let index = 0; index < workouts.length; index++) {
-        let createdDate = workouts[index].createdAt;
-        console.log(createdDate);
-
+        const workout = workouts[index];
+        
         // create a new card and all it's pieces (header, body, footer) for styling
         let newCardEl = document.createElement("div");
         newCardEl.setAttribute("class", "card");
-
+        
         let newCardHeaderEl = document.createElement("div");
         newCardHeaderEl.setAttribute("class", "card-header");
-        newCardHeaderEl.innerText = `${workouts[index].title}`;
-
+        newCardHeaderEl.innerText = `${workout.title}`;
+        
         let newCardBodyEl = document.createElement("div");
         newCardBodyEl.setAttribute("class", "card-body");
 
         // TODO: this will be a loop of exercises
-        let newExerciseTitleEl = document.createElement("p");
-        newExerciseTitleEl.setAttribute("class", "card-title");
-        newExerciseTitleEl.innerText = "Exercise 1 Name";
-        let newExerciseTextEl = document.createElement("p");
-        newExerciseTextEl.setAttribute("class", "card-text");
-        newExerciseTextEl.innerText = "Exercise 1 Details";
-        newCardBodyEl.append(newExerciseTitleEl);
-        newCardBodyEl.append(newExerciseTextEl);
+        const exercises = workout.exercises;
+        for (let index2 = 0; index2 < exercises.length; index2++) {
+            const exercise = exercises[index2];
+            let newExerciseTitleEl = document.createElement("h3");
+            newExerciseTitleEl.setAttribute("class", "card-title");
+            newExerciseTitleEl.innerText = `${exercise.name}, ${exercise.type}`;
+            let newExerciseTextEl = document.createElement("p");
+            newExerciseTextEl.setAttribute("class", "card-text");
+            let details = "";
+            if(exercise.weight) details += `wgt: ${exercise.weight} `;
+            if(exercise.reps) details += `reps: ${exercise.reps} `;
+            if(exercise.sets) details += `sets: ${exercise.sets} `;
+            if(exercise.duration) details += `duration: ${exercise.duration} `;
+            if(exercise.cardio && exercise.distance) details += `distance: ${exercise.distance} `;
+            newExerciseTextEl.innerText = details;
+            
+            newCardBodyEl.append(newExerciseTitleEl);
+            newCardBodyEl.append(newExerciseTextEl);
+        }
 
-        // let newAddBtnEl = document.createElement("button");
-        // newAddBtnEl.setAttribute("class", "btn btn-sm customBtn addExerciseBtn");
-        // newAddBtnEl.setAttribute("type", "button");
-        // newAddBtnEl.setAttribute("data-id", `${workouts[index]._id}`);
-        // newAddBtnEl.innerText = `Add new exercise`;
-        let newAddBtnEl = document.createElement("a");
+        let newAddBtnEl = document.createElement("button");
         newAddBtnEl.setAttribute("class", "btn btn-sm customBtn addExerciseBtn");
-        newAddBtnEl.setAttribute("href", "exercise.html")
+        // newAddBtnEl.setAttribute("href", "exercise.html");
+        newAddBtnEl.setAttribute("id",`${workout._id}`);
         newAddBtnEl.innerText = `Add new exercise`;
-        // also create an event listener for this new button
-        // newAddBtnEl.addEventListener("click", getNewExerciseEntry);
-
-        // <div class="card-footer"><large class="text-muted">${kudos}</large>
+        newAddBtnEl.addEventListener("click", toggleExerciseInput);
+        
         let newCardFooterEl = document.createElement("div");
         newCardFooterEl.setAttribute("class", "card-footer");
-        //<large class="text-muted">${kudos}</large>
         let newLargeEl = document.createElement("large");
         newLargeEl.setAttribute("class", "text-muted");
-        newLargeEl.innerText = `Workout created on ${createdDate}`;
+        let createdDate = workout.createdAt.substr(0,10);
+        newLargeEl.innerText = `Workout created ${createdDate}`;
         newCardFooterEl.append(newLargeEl);
 
         newCardEl.append(newCardHeaderEl);
@@ -83,9 +90,16 @@ function displayWorkouts(workouts) {
     }
 }
 
-function getNewExerciseEntry() {
-    console.log("HERE !!!")
+function toggleExerciseInput(event) {
+    // the button adding an exercise to a workout has an id matching the workout id
+    const workoutID = event.target.id;
+    
+    const hiddenFieldEl = document.getElementById("hiddenID");
+    hiddenFieldEl.setAttribute("value",`${workoutID}`);
 
+    // hide the workout section, unhide the exercise section
+    document.getElementById("workout-section").style.display = "none";
+    document.getElementById("exercise-section").style.display = "block";
 }
 
 getWorkouts();

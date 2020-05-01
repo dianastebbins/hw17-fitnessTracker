@@ -24,7 +24,7 @@ const ExerciseSchema = new Schema({
       type: Number
   },
   duration: {
-      type: Date // ? really, time...
+      type: Number
   },
   cardio: { // If the exercise is a cardio exercise, I should be able to track my distance traveled.
       type: Boolean,
