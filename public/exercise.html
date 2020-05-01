@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport">
+    <title>Fitness Tracker Exercises</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- and now apply custom styling for this particular project -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="container col-md-6 col-md-offset-3">
+        <form action="/submit-exercise" method="post">
+            <input type="text" class="form-control" name="name" placeholder="name of exercise" autofocus>
+            <input type="text" class="form-control" name="type" placeholder="type of exercise" autofocus>
+            <button class="btn btn-lg btn-block customBtn2" id="submit-exercise" type="submit">Submit</button>
+            <!-- <p><a href="/exercises">See your exercises!</a></p> -->
+        </form>
+    </div>
+
+    <script src="exercise.js"></script>
+</body>
+
+</html>

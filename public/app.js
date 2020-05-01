@@ -49,13 +49,17 @@ function displayWorkouts(workouts) {
         newCardBodyEl.append(newExerciseTitleEl);
         newCardBodyEl.append(newExerciseTextEl);
 
-        let newAddBtnEl = document.createElement("button");
+        // let newAddBtnEl = document.createElement("button");
+        // newAddBtnEl.setAttribute("class", "btn btn-sm customBtn addExerciseBtn");
+        // newAddBtnEl.setAttribute("type", "button");
+        // newAddBtnEl.setAttribute("data-id", `${workouts[index]._id}`);
+        // newAddBtnEl.innerText = `Add new exercise`;
+        let newAddBtnEl = document.createElement("a");
         newAddBtnEl.setAttribute("class", "btn btn-sm customBtn addExerciseBtn");
-        newAddBtnEl.setAttribute("type", "button");
-        newAddBtnEl.setAttribute("data-id", `${workouts[index]._id}`);
+        newAddBtnEl.setAttribute("href", "exercise.html")
         newAddBtnEl.innerText = `Add new exercise`;
         // also create an event listener for this new button
-        newAddBtnEl.addEventListener("click", getNewExerciseEntry);
+        // newAddBtnEl.addEventListener("click", getNewExerciseEntry);
 
         // <div class="card-footer"><large class="text-muted">${kudos}</large>
         let newCardFooterEl = document.createElement("div");
@@ -81,6 +85,7 @@ function displayWorkouts(workouts) {
 
 function getNewExerciseEntry() {
     console.log("HERE !!!")
+
 }
 
 getWorkouts();

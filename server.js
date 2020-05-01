@@ -50,7 +50,8 @@ app.post("/submit-exercise", ({ body }, res) => {
     db.Exercise.create(body)
         .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
         .then(dbExercise => {
-            res.json(dbExercise);
+            // res.json(dbExercise);
+            res.redirect("/");
         })
         .catch(err => {
             res.json(err);
@@ -72,6 +73,11 @@ app.post("/submit-exercise/:id", (req, res) => {
     //         res.json(err);
     //     });
 });
+
+// app.get("/new/exercise", (req, res) => {
+//     console.log("Here !!!")
+//     res.redirect("./exercise");
+// })
 
 // GET paths, get workouts, get exercises, get workouts populated with exercises details
 app.get("/exercises", (req, res) => {
