@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
+// const compress = require("compression");
 
 // heroku PORT or localhost/3000
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,9 @@ const app = express();
 
 // logger provided by morgan
 app.use(logger("dev"));
+
+// keeping the app size smaller
+// app.use(compression());
 
 // boilerplate for express
 app.use(express.urlencoded({ extended: true }));
@@ -67,7 +71,7 @@ app.get("/exercises", (req, res) => {
 });
 
 app.get("/workouts", (req, res) => {
-  db.Workout.find({})
+  db.Workout.find({}).sort('-createdAt')
     .then(dbWorkout => {
       res.json(dbWorkout);
     })

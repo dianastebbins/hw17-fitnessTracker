@@ -7,27 +7,36 @@
     <title>Fitness Tracker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
         integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- and now apply custom styling for this particular project -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
 
-    <div class="container col-md-4 col-md-offset-4">
+    <div class="container col-md-6 col-md-offset-3">
         <form action="/submit-workout" method="post">
             <h2>Create A Workout</h2>
             <input type="text" class="form-control" name="title" placeholder="title of workout" autofocus>
-            <!-- <input type="text" class="form-control" name="title" placeholder="title" autofocus> -->
-            <button class="btn btn-lg btn-primary btn-block" id="submit-workout" type="submit">Submit</button>
+            <button class="btn btn-md btn-block customBtn" id="submit-workout" type="submit">Submit</button>
             <p><a href="/workouts">See your workouts!</a></p>
             <p><a href="/populated">See your workouts, populated with exercises!</a></p>
         </form>
         <form action="/submit-exercise" method="post">
-            <h2>Add an Exercise</h2>
+            <h2>Track Your Progress!</h2>
             <input type="text" class="form-control" name="name" placeholder="name of exercise" autofocus>
             <input type="text" class="form-control" name="type" placeholder="type of exercise" autofocus>
-            <button class="btn btn-lg btn-primary btn-block" id="submit-exercise" type="submit">Submit</button>
+            <button class="btn btn-lg btn-block customBtn" id="submit-exercise" type="submit">Submit</button>
             <p><a href="/exercises">See your exercises!</a></p>
         </form>
+        <h5>Most Recent:</h5>
+        <div id="latest-wo"></div>
+        <hr>
+        <hr>
+        <h5>Previous:</h5>
+        <div id="previous-wo"></div>
     </div>
+
+    <script src="app.js"></script>
 </body>
 
 </html>

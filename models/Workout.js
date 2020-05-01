@@ -10,6 +10,11 @@ const WorkoutSchema = new Schema({
     unique: true,
     required: "workout name is required"
   },
+  createdAt: {
+      type: Date,
+      required: true,
+      default: Date.now()
+  },
   exercises: [
     {
       type: Schema.Types.ObjectId, // equivalent of hasMany in sequelize
